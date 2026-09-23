@@ -9,7 +9,3 @@ export const photo = (key: string) => ({
   srcSet: `/renders/${key}-960.webp 960w, /renders/${key}-1920.webp 1920w`,
 });
 
-export const sketch = (key: string) => ({
-  src: `/renders/${key}-sketch-1920.webp`,
-  srcSet: `/renders/${key}-sketch-960.webp 960w, /renders/${key}-sketch-1920.webp 1920w`,
-});

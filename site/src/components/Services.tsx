@@ -55,7 +55,7 @@ export default function Services() {
                   <img src={img.src} srcSet={img.srcSet} sizes="360px" alt="" loading="lazy" />
                   <div className="card__meta">
                     <h3>{c.title}</h3>
-                    <Link href={c.href}>View work</Link>
+                    <Link href={c.href}>{c.cta}</Link>
                   </div>
                 </article>
               );

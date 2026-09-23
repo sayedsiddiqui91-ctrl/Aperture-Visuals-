@@ -1,4 +1,4 @@
-// Asset pipeline: raw renders -> web-sized photo + generated "pencil sketch" layers.
+// Asset pipeline: raw renders -> web-sized WebP photos, a tiny placeholder, and the traced logo.
 // Usage: node scripts/assets.mjs
 import sharp from "sharp";
 import potrace from "potrace";
@@ -9,29 +9,7 @@ const RAW = path.resolve("../assets-raw");
 const OUT = path.resolve("public/renders");
 const WIDTHS = [960, 1920];
 
-// Sketch tint (cobalt) and paper colour, matching the site palette.
-const INK = { r: 40, g: 63, b: 125 };
-const PAPER = { r: 234, g: 223, b: 201 };
 
-async function sketchLayer(buf, width) {
-  // Classic "pencil sketch": grayscale, colour-dodge with its inverted blur.
-  const gray = await sharp(buf).resize(width).flatten({ background: "#fff" }).grayscale().removeAlpha().toBuffer();
-  const meta = await sharp(gray).metadata();
-  const inv = await sharp(gray).negate().blur(width / 400).toBuffer();
-  const dodge = await sharp(gray)
-    .composite([{ input: inv, blend: "color-dodge" }])
-    // push midtones to white so only edges survive
-    .linear(3.0, -480)
-    .toBuffer();
-  // Tint the line-work cobalt, then multiply over paper.
-  const tinted = await sharp(dodge).tint(INK).toBuffer();
-  return sharp({
-    create: { width: meta.width, height: meta.height, channels: 3, background: PAPER },
-  })
-    .composite([{ input: tinted, blend: "multiply" }])
-    .webp({ quality: 70 })
-    .toBuffer();
-}
 
 async function processRender(file) {
   const name = path.parse(file).name;
@@ -39,8 +17,6 @@ async function processRender(file) {
   const input = await sharp(src).rotate().flatten({ background: "#fff" }).removeAlpha().toBuffer();
   for (const w of WIDTHS) {
     await sharp(input).resize(w).webp({ quality: 80 }).toFile(path.join(OUT, `${name}-${w}.webp`));
-    const sk = await sketchLayer(input, w);
-    await writeFile(path.join(OUT, `${name}-sketch-${w}.webp`), sk);
   }
   // tiny blurred placeholder
   await sharp(input).resize(24).blur(2).webp({ quality: 40 }).toFile(path.join(OUT, `${name}-lqip.webp`));

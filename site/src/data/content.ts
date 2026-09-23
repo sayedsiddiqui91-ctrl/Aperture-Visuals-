@@ -1,20 +1,30 @@
 /* All copy for the site. Anything marked TODO is a placeholder to confirm with the client. */
 
+const WA_NUMBER = "8801850355772"; // international format, no "+" or leading 0
+const WA_TEXT = "Hi Aperture Visuals, I'd like to discuss a project.";
+
 export const site = {
   name: "Aperture Visuals",
   tagline: "Architectural visualization studio",
   email: "hello@aperturevisuals.com",
   phone: "01850355772",
+  phoneDisplay: "+880 1850-355772",
   phoneHref: "tel:+8801850355772",
-  whatsapp: "https://wa.me/8801850355772?text=Hi%20Aperture%20Visuals%2C%20I%27d%20like%20to%20discuss%20a%20project.",
-  scheduleCall: "#", // TODO: booking link (Calendly etc.) — client to confirm
-  address: ["Dhaka, Bangladesh", "Available worldwide"], // TODO: street address if wanted
+  /** Universal link: opens the app directly on phones. On computers a chooser intercepts it (see WhatsAppChooser). */
+  whatsapp: `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(WA_TEXT)}`,
+  /** Opens the installed WhatsApp desktop app (Windows / macOS) straight into the chat. */
+  whatsappApp: `whatsapp://send?phone=${WA_NUMBER}&text=${encodeURIComponent(WA_TEXT)}`,
+  /** Browser fallback when the desktop app isn't installed. */
+  whatsappWeb: `https://web.whatsapp.com/send?phone=${WA_NUMBER}&text=${encodeURIComponent(WA_TEXT)}`,
+  address: ["Dhaka, Bangladesh", "Available worldwide"],
   social: [
-    { label: "Instagram", short: "ig", href: "#" }, // TODO
-    { label: "Behance", short: "Be", href: "#" }, // TODO
-    { label: "LinkedIn", short: "in", href: "#" }, // TODO
+    { label: "Facebook", href: "https://www.facebook.com/p/Aperture-Visuals-61573651734834/" },
+    { label: "Instagram", href: "https://www.instagram.com/aperture__visuals" },
   ],
 };
+
+/** Social profiles with a real URL (placeholders are hidden until the client supplies them). */
+export const socials = () => site.social.filter((s) => s.href && s.href !== "#");
 
 export const nav = [
   { label: "Home", href: "/" },
@@ -36,7 +46,7 @@ export type Sector = "Exterior" | "Interior" | "Healthcare" | "Retail" | "Hospit
 export interface Project {
   slug: string;
   name: string;
-  location: string; // shown as the second label on tiles (bloom shows country)
+  location?: string; // only where known — shown on the project page
   sector: Sector;
   service: string;
   year: string;
@@ -128,7 +138,6 @@ export const projects: Project[] = [
   {
     slug: "surgical-suite",
     name: "Surgical Suite",
-    location: "Healthcare",
     sector: "Healthcare",
     service: "Interior visualization",
     year: "2025",
@@ -143,7 +152,6 @@ export const projects: Project[] = [
   {
     slug: "concept-store",
     name: "Concept Store",
-    location: "Retail",
     sector: "Retail",
     service: "Interior visualization",
     year: "2025",
@@ -173,7 +181,6 @@ export const projects: Project[] = [
   {
     slug: "patel-residence",
     name: "Patel Residence",
-    location: "Interior",
     sector: "Interior",
     service: "Interior visualization",
     year: "2025",
@@ -186,7 +193,6 @@ export const projects: Project[] = [
   {
     slug: "lagoon-cabana",
     name: "Lagoon Cabana",
-    location: "Hospitality",
     sector: "Hospitality",
     service: "Exterior visualization",
     year: "2026",
@@ -199,7 +205,6 @@ export const projects: Project[] = [
   {
     slug: "grady-commercial",
     name: "Grady Drive-through",
-    location: "Commercial",
     sector: "Commercial",
     service: "Exterior visualization",
     year: "2026",
@@ -212,7 +217,6 @@ export const projects: Project[] = [
   {
     slug: "mgx-site",
     name: "MGX Site Aerial",
-    location: "Masterplan",
     sector: "Masterplan",
     service: "Aerial visualization",
     year: "2025",
@@ -254,21 +258,19 @@ export const projectBySlug = (slug: string) => projects.find((p) => p.slug === s
 export const services = {
   statement: "We create 3D visuals that make architectural ideas clear, emotional and easy to say yes to",
   cards: [
-    { title: "3D Architectural Visualization", image: "breeze-exterior", href: "/projects" },
-    { title: "3D Interior Visualization", image: "living-glass", href: "/projects" },
-    { title: "3D Animation & Cinematics", image: "view-a-house", href: "/projects" },
-    { title: "Real-time & VR Experiences", image: "mark-maric-house", href: "/projects" },
+    { title: "3D Architectural Visualization", image: "breeze-exterior", href: "/projects?type=Exterior", cta: "View work" },
+    { title: "3D Interior Visualization", image: "living-glass", href: "/projects?type=Interior", cta: "View work" },
+    { title: "3D Animation & Cinematics", image: "view-a-house", href: "/#pricing", cta: "See pricing" },
+    { title: "Real-time & VR Experiences", image: "mark-maric-house", href: "/#pricing", cta: "See pricing" },
   ],
 };
 
 export const about = {
   statement: "By combining an architect's eye with technical precision, we make sure every image reflects a thoughtful, collaborative process shaped by your ideas",
-  // TODO: confirm real figures with the client
   stats: [
-    { value: 120, suffix: "+", label: "Projects" },
-    { value: 40, suffix: "+", label: "Clients" },
-    { value: 4, suffix: "", label: "Countries" },
-    { value: 5, suffix: "+", label: "Years" },
+    { value: 50, suffix: "+", label: "Projects completed" },
+    { value: 20, suffix: "+", label: "Clients served" },
+    { value: 5, suffix: "+", label: "Years of experience" },
   ],
 };
 
@@ -298,21 +300,30 @@ export const advantages = {
   ],
 };
 
+/** The three ways to reach the studio, used in the contact section, the menu and the footer. */
+export const contact = {
+  whatsapp: { label: "Chat on WhatsApp", href: site.whatsapp },
+  call: { label: `Call ${site.phoneDisplay}`, href: site.phoneHref },
+  email: { label: `Email ${site.email}`, href: `mailto:${site.email}?subject=Project%20enquiry` },
+};
+
 export const cta = {
   title: "Let's talk about your next project",
+  lead: "Message us on WhatsApp, call the studio directly, or send an email — whichever suits you.",
   image: "pool-cabana",
-  primary: { label: "Schedule a call", href: site.scheduleCall, external: true },
-  secondary: { label: "Discuss the project", href: site.whatsapp, external: true },
 };
 
 export const pricing = {
   label: "Pricing",
   intro: ["Pricing varies depending on project scale, detail, and deadline.", "Below are starting estimates — contact us for a tailored quotation."],
   note: "For detailed quotations and custom packages, please contact us directly.",
+  currencies: ["BDT", "USD", "AUD", "GBP", "EUR"] as const,
+  conversionNote: "Converted from BDT at today's reference rate — indicative only; quotes are issued in BDT or your currency on request.",
   plans: [
     {
       name: "Static render",
       price: "3,000 BDT+",
+      amountBDT: 3000,
       unit: "per image",
       tone: "teal",
       items: ["Exterior / Interior / Detail shots", "Photorealistic lighting & materials", "High-resolution delivery", "2 rounds of revisions included"],
@@ -320,6 +331,7 @@ export const pricing = {
     {
       name: "Animation",
       price: "1,000 BDT+",
+      amountBDT: 1000,
       unit: "per second",
       tone: "gold",
       items: ["Walkthrough / Cinematic / Promo", "Smooth camera movement", "Cinematic color grading", "Delivered in MP4 / MOV"],
@@ -327,6 +339,7 @@ export const pricing = {
     {
       name: "Advanced viz",
       price: "Custom",
+      amountBDT: null,
       unit: "quote on request",
       tone: "teal",
       items: ["Real-time (Unreal Engine)", "360° VR Tour", "Competition / Concept projects", "Full production package available"],

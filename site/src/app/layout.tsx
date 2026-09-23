@@ -3,6 +3,9 @@ import { Poppins, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Nav from "@/components/Nav";
+import WhatsAppChooser from "@/components/WhatsAppChooser";
+import { site } from "@/data/content";
+import { qrSvg } from "@/lib/qr";
 
 const sans = Poppins({ subsets: ["latin"], variable: "--font-sans", weight: ["300", "400", "500", "600"] });
 const display = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-display", weight: ["400", "500"] });
@@ -12,22 +15,32 @@ export const metadata: Metadata = {
   title: "Aperture Visuals — Architectural visualization studio",
   description:
     "Photorealistic 3D renders, cinematic animations and real-time experiences for architects, developers and designers. Dhaka, available worldwide.",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Aperture Visuals",
     description: "Bring your architecture to life with cinematic 3D visualization.",
-    images: ["/video/poster.jpg"],
+    images: ["/video/poster-1920.webp"],
+    type: "website",
+    siteName: "Aperture Visuals",
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = { themeColor: "#082c2e", width: "device-width", initialScale: 1 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const waQr = await qrSvg(site.whatsapp); // encodes the wa.me link, which a phone camera opens in the app
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`}>
+    <html lang="en" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
+      <head>
+        {/* reveal animations only hide content when JS is actually running */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add(\"js\")" }} />
+      </head>
       <body>
         <SmoothScroll />
         <Nav />
         {children}
+        <WhatsAppChooser qr={waQr} />
       </body>
     </html>
   );

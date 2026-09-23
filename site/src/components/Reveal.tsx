@@ -25,12 +25,13 @@ export default function Reveal() {
 }
 
 /** Splits an array of lines into masked spans for the line reveal. */
-export function Lines({ lines, className = "", as: Tag = "h2" }: { lines: string[]; className?: string; as?: "h1" | "h2" | "p" }) {
+export function Lines({ lines, className = "", as: Tag = "h2", id }: { lines: string[]; className?: string; as?: "h1" | "h2" | "p"; id?: string }) {
   return (
-    <Tag className={`lines ${className}`} data-lines="">
+    <Tag className={`lines ${className}`} data-lines="" id={id}>
       {lines.map((l, i) => (
+        // the trailing space keeps words apart in the text/accessible name ("architecture to", not "architectureto")
         <span className="line" key={i}>
-          <span>{l}</span>
+          <span>{l}</span>{" "}
         </span>
       ))}
     </Tag>

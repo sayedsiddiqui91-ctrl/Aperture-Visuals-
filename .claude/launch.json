@@ -1,6 +1,31 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "aperture-dev", "runtimeExecutable": "npm", "cwd": "site", "runtimeArgs": ["run", "dev", "--", "--port", "3011"], "port": 3011 }
+    {
+      "name": "aperture-dev",
+      "runtimeExecutable": "npm",
+      "cwd": "site",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "3011"
+      ],
+      "port": 3011
+    },
+    {
+      "name": "aperture-prod",
+      "runtimeExecutable": "npm",
+      "cwd": "site",
+      "runtimeArgs": [
+        "run",
+        "start",
+        "--",
+        "--port",
+        "3020"
+      ],
+      "port": 3020
+    }
   ]
 }

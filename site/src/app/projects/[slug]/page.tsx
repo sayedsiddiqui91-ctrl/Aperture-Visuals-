@@ -13,7 +13,16 @@ export function generateStaticParams() {
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = projectBySlug((await params).slug);
-  return { title: p ? `${p.name} — Aperture Visuals` : "Project" };
+  if (!p) return { title: "Project — Aperture Visuals" };
+  const title = `${p.name} — ${p.service} | Aperture Visuals`;
+  const image = `/renders/${p.cover}-1920.webp`;
+  return {
+    title,
+    description: p.intro,
+    alternates: { canonical: `/projects/${p.slug}` },
+    openGraph: { title, description: p.intro, images: [{ url: image, width: 1920, alt: p.name }], type: "article" },
+    twitter: { card: "summary_large_image", title, description: p.intro, images: [image] },
+  };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -35,10 +44,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="phero__content">
           <h1 className="h-64">{p.name}</h1>
           <div className="phero__meta">
-            <div>
-              <span>Location</span>
-              {p.location}
-            </div>
+            {p.location && (
+              <div>
+                <span>Location</span>
+                {p.location}
+              </div>
+            )}
             <div>
               <span>Sector</span>
               {p.sector}
@@ -86,7 +97,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <img src={nextCover.src} srcSet={nextCover.srcSet} sizes="720px" alt="" loading="lazy" />
           <div className="tile__meta">
             <h2>{next.name}</h2>
-            <span>{next.location}</span>
+            <span>{next.sector}</span>
           </div>
         </Link>
         <Button label="All projects" href="/projects" variant="outline" />

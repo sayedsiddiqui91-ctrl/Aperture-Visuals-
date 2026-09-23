@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { featuredProjects, projects, type Project } from "@/data/content";
+import { featuredProjects, type Project } from "@/data/content";
 import { photo } from "@/lib/renders";
 import { Button } from "./Button";
 
@@ -13,10 +13,11 @@ const shape = (i: number) => {
   return "tile tile--l";
 };
 
-export function Tile({ p, i }: { p: Project; i: number }) {
+export function Tile({ p, i, level = 3, reveal = true }: { p: Project; i: number; level?: 2 | 3; reveal?: boolean }) {
   const img = photo(p.cover);
+  const H = level === 2 ? "h2" : "h3";
   return (
-    <Link href={`/projects/${p.slug}`} className={shape(i)} data-reveal={(i % 3) * 0.08}>
+    <Link href={`/projects/${p.slug}`} className={shape(i)} data-reveal={reveal ? (i % 3) * 0.08 : undefined}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={img.src}
@@ -26,37 +27,38 @@ export function Tile({ p, i }: { p: Project; i: number }) {
         loading={i < 2 ? "eager" : "lazy"}
       />
       <div className="tile__meta">
-        <h2>{p.name}</h2>
-        <span>{p.location}</span>
+        <H>{p.name}</H>
+        <span>{p.sector}</span>
       </div>
     </Link>
   );
 }
 
-export default function Portfolio({ all = false }: { all?: boolean }) {
-  const list = all ? projects : featuredProjects;
+export function Grid({ list, level = 3, reveal = true }: { list: Project[]; level?: 2 | 3; reveal?: boolean }) {
+  return (
+    <div className="portfolio__grid">
+      {list.map((p, i) => (
+        <Tile key={p.slug} p={p} i={i} level={level} reveal={reveal} />
+      ))}
+    </div>
+  );
+}
+
+export default function Portfolio() {
   return (
     <section className="portfolio" id="work" aria-labelledby="portfolio-title">
-      {!all && (
-        <div className="portfolio__head">
-          <div className="slabel slabel--center" data-reveal>
-            <span className="slabel__t">Our work</span>
-          </div>
-          <h2 className="h-64" id="portfolio-title" data-reveal="0.1">
-            Featured Projects
-          </h2>
+      <div className="portfolio__head">
+        <div className="slabel slabel--center" data-reveal>
+          <span className="slabel__t">Our work</span>
         </div>
-      )}
-      <div className="portfolio__grid">
-        {list.map((p, i) => (
-          <Tile key={p.slug} p={p} i={i} />
-        ))}
+        <h2 className="h-64" id="portfolio-title" data-reveal="0.1">
+          Featured Projects
+        </h2>
       </div>
-      {!all && (
-        <div className="portfolio__more">
-          <Button label="All projects" href="/projects" variant="outline" />
-        </div>
-      )}
+      <Grid list={featuredProjects} />
+      <div className="portfolio__more">
+        <Button label="All projects" href="/projects" variant="outline" />
+      </div>
     </section>
   );
 }

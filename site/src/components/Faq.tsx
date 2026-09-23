@@ -20,11 +20,14 @@ export default function Faq() {
             const isOpen = open === i;
             return (
               <li className="faq__item" key={item.q} data-open={isOpen ? "true" : "false"}>
-                <button className="faq__q" aria-expanded={isOpen} aria-controls={`faq-a-${i}`} onClick={() => setOpen(isOpen ? null : i)}>
-                  <h3 style={{ fontSize: "inherit", fontWeight: "inherit" }}>{item.q}</h3>
-                  <i aria-hidden="true" />
-                </button>
-                <div className="faq__a" id={`faq-a-${i}`} role="region" aria-hidden={!isOpen}>
+                {/* accordion pattern: the button lives inside the heading, not the other way round */}
+                <h3 className="faq__h">
+                  <button className="faq__q" id={`faq-q-${i}`} aria-expanded={isOpen} aria-controls={`faq-a-${i}`} onClick={() => setOpen(isOpen ? null : i)}>
+                    {item.q}
+                    <i aria-hidden="true" />
+                  </button>
+                </h3>
+                <div className="faq__a" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`} inert={!isOpen}>
                   <div>
                     <p>{item.a}</p>
                   </div>
