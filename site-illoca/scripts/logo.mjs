@@ -1,0 +1,15 @@
+import sharp from "sharp";
+import potrace from "potrace";
+import { writeFile, mkdir } from "node:fs/promises";
+const src = "../logo.jpg";
+const trace = (buf) => new Promise((res, rej) => potrace.trace(buf, { threshold: 128, turdSize: 20, optTolerance: 0.3 }, (e, svg) => (e ? rej(e) : res(svg))));
+await mkdir("public/brand", { recursive: true });
+const mark = await sharp(src).extract({ left: 1440, top: 676, width: 360, height: 512 }).threshold(128).png().toBuffer();
+const word = await sharp(src).extract({ left: 1400, top: 1217, width: 442, height: 74 }).threshold(128).png().toBuffer();
+const sub = await sharp(src).extract({ left: 1495, top: 1292, width: 252, height: 30 }).threshold(128).png().toBuffer();
+await writeFile("public/brand/mark.svg", await trace(mark));
+await writeFile("public/brand/wordmark.svg", await trace(word));
+await writeFile("public/brand/sub.svg", await trace(sub));
+await sharp(Buffer.from(await trace(mark))).resize(200).png().toFile("C:/Users/LENOVO/AppData/Local/Temp/claude/E--aperture-visuals/bbfb8fb1-4a73-4e23-9c22-0a421d861a43/scratchpad/mark.png");
+await sharp(Buffer.from(await trace(word))).resize(440).png().toFile("C:/Users/LENOVO/AppData/Local/Temp/claude/E--aperture-visuals/bbfb8fb1-4a73-4e23-9c22-0a421d861a43/scratchpad/wordmark.png");
+console.log("ok");

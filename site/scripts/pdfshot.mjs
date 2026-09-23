@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const OUT = "C:/Users/LENOVO/AppData/Local/Temp/claude/E--aperture-visuals/bbfb8fb1-4a73-4e23-9c22-0a421d861a43/scratchpad/";
+const browser = await chromium.launch({ channel: "msedge", headless: false, args: ["--headless=new"] });
+const page = await (await browser.newContext({ viewport: { width: 1600, height: 1000 } })).newPage();
+await page.goto("file:///E:/aperture%20visuals/Catalogue%20FINAL%20not%20editable.pdf#page=12&zoom=100", { waitUntil: "load" }).catch(e => console.log(e.message));
+await page.waitForTimeout(6000);
+await page.screenshot({ path: OUT + "pdf-pricing.png" });
+await page.goto("file:///E:/aperture%20visuals/Catalogue%20FINAL%20not%20editable.pdf#page=1&zoom=100", { waitUntil: "load" }).catch(e => console.log(e.message));
+await page.waitForTimeout(4000);
+await page.screenshot({ path: OUT + "pdf-cover.png" });
+await browser.close();
+console.log("ok");

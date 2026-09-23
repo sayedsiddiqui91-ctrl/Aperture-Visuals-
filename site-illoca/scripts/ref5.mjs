@@ -1,0 +1,13 @@
+import { chromium } from "playwright";
+const OUT = "C:/Users/LENOVO/AppData/Local/Temp/claude/E--aperture-visuals/bbfb8fb1-4a73-4e23-9c22-0a421d861a43/scratchpad/ref/";
+const browser = await chromium.launch({ channel: "msedge", headless: true });
+const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await page.goto("https://illoca.unseen.co/", { waitUntil: "networkidle" }).catch(()=>{});
+await page.waitForTimeout(4500);
+await page.evaluate(() => document.querySelector("button.js-modal-button")?.click());
+await page.waitForTimeout(2500);
+await page.screenshot({ path: OUT+"watch-modal.jpg", type:"jpeg", quality:70 });
+console.log("MODAL:", await page.evaluate(() => { const m=[...document.querySelectorAll("div")].filter(e=>getComputedStyle(e).position==="fixed"&&e.getBoundingClientRect().width>1200&&getComputedStyle(e).opacity!=="0"&&getComputedStyle(e).visibility!=="hidden").map(e=>({cls:e.className.toString().slice(0,120), media:[...e.querySelectorAll("video,iframe")].map(v=>(v.src||v.currentSrc||"").slice(0,120)), z:getComputedStyle(e).zIndex})); return m; }));
+console.log("SCROLLBAR:", await page.evaluate(() => { const s=document.querySelector(".cursor-grab"); const p=s?.parentElement; return p? {html:p.outerHTML.slice(0,600), rect:p.getBoundingClientRect().toJSON(), bg:getComputedStyle(s.firstElementChild).backgroundColor}:"none"; }));
+console.log("FEATURE BODY/BTN:", await page.evaluate(() => { const b=[...document.querySelectorAll("p,div")].find(e=>e.childElementCount===0&&/Transform rough sketches/.test(e.textContent)); const s=getComputedStyle(b); const t=[...document.querySelectorAll("h2,h3,div")].find(e=>e.childElementCount>0&&e.textContent.trim().startsWith("Augmented Sketch")&&e.getBoundingClientRect().height<120&&e.getBoundingClientRect().height>60); const ts=t?getComputedStyle(t):{}; return {body:[s.fontFamily.split(",")[0],s.fontSize,s.fontWeight,s.color,s.lineHeight,b.getBoundingClientRect().width], title:[ts.fontFamily?.split(",")[0],ts.fontSize,ts.fontWeight,ts.lineHeight,ts.letterSpacing], titleHTML:t?.outerHTML.slice(0,600)}; }));
+await browser.close();
