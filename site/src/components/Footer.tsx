@@ -32,7 +32,7 @@ export default function Footer() {
   const links = socials();
   return (
     <footer className="footer" aria-label="Footer">
-      <div className="footer__wrap">
+      <div className="footer__wrap" data-nav="dark">
         <div className="footer__cols">
           <div className="footer__cta">
             <h2>{footer.title}</h2>
@@ -99,7 +99,7 @@ export default function Footer() {
           <span>{site.tagline}</span>
         </div>
       </div>
-      <div className="footer__band" aria-hidden="true">
+      <div className="footer__band" aria-hidden="true" data-nav="dark">
         {footer.band[0]}
         <b>·</b>
         {footer.band[1]}

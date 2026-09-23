@@ -1,7 +1,7 @@
 # Aperture Visuals — website
 
 Next.js 16 + GSAP ScrollTrigger + Lenis. Design follows the bloom3d.studio reference
-themed to the catalogue: teal #082C2E, gold #B5955A, white, grey monogram watermark; Poppins body, Cormorant Garamond display. Pricing section reproduces the catalogue pricing page.
+themed to the catalogue: teal #082C2E, gold #B5955A, white, grey monogram watermark; Geist for all type. Photos and video carry no colour overlays beyond light neutral shading for text. Pricing section reproduces the catalogue pricing page.
 
 ## Run
 
@@ -47,6 +47,7 @@ stats, "Schedule a call" link, social URLs, street address, and the project name
   (run against a production server: `npm run build && npm start -- -p 3020`)
 - `node scripts/verify.mjs` — currency switch, CTA, hero video/pause, menu focus, project filter, 404, sitemap
 - `node scripts/lcp.mjs` — real LCP under mobile throttling (5 runs, median)
+- `node scripts/verify-nav-overlap.mjs` — scrolls the page down and up at three sizes and fails on any frame where the nav logo sits on page text without its bar
 - `node scripts/bloom.mjs` / `bloom2.mjs` — capture and inspect the reference site for side-by-side checks
 
 The previous illoca-style build is archived in `../site-illoca/`.

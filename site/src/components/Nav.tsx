@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { nav, cta, contact } from "@/data/content";
 import { Button } from "./Button";
 import { getLenis } from "@/lib/scroll";
@@ -18,10 +19,60 @@ const mask = (url: string): React.CSSProperties => ({
   maskPosition: "center",
 });
 
-/** Wordmark left, hamburger right (blend-difference so it reads on video and paper); right-side panel menu. */
+/** Vertical centre of the 72px nav bar. */
+const NAV_Y = 36;
+/** Below this scroll depth the nav always shows (you are still on the hero). */
+const HIDE_AFTER = 160;
+
+/**
+ * Wordmark left, hamburger right; right-side panel menu.
+ * The nav is white over dark areas (sections marked data-nav="dark") and teal over light ones,
+ * so it always has solid contrast — a blend mode washes out over mid-tone footage.
+ * Once scrolled it gets a frosted bar (so the logo never sits on page text), hides while scrolling
+ * down, and slides back in on the way up.
+ */
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [overDark, setOverDark] = useState<boolean | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const wasOpen = useRef(false);
+  const lastY = useRef(0);
+  const openRef = useRef(open);
+  openRef.current = open;
+  const pathname = usePathname();
+
+  useEffect(() => {
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const y = window.scrollY;
+      const dy = y - lastY.current;
+      if (Math.abs(dy) > 6) {
+        const focusInNav = document.activeElement?.closest(".nav");
+        setHidden(dy > 0 && y > HIDE_AFTER && !openRef.current && !focusInNav);
+        lastY.current = y;
+      }
+      if (y <= HIDE_AFTER) setHidden(false);
+      setScrolled(y > 8);
+      const dark = [...document.querySelectorAll<HTMLElement>("[data-nav=dark]")].some((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top <= NAV_Y && r.bottom >= NAV_Y;
+      });
+      setOverDark(dark);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (open) {
@@ -39,7 +90,13 @@ export default function Nav() {
 
   return (
     <>
-      <header className="nav">
+      <header
+        className="nav"
+        data-over={overDark === null ? undefined : overDark ? "dark" : "light"}
+        data-bar={scrolled && overDark !== null ? (overDark ? "dark" : "light") : undefined}
+        data-hidden={hidden}
+        onFocus={() => setHidden(false)}
+      >
         <Link href="/" className="nav__logo" aria-label="Aperture Visuals — home" onClick={() => setOpen(false)}>
           <span className="nav__mark" aria-hidden="true" style={mask("/brand/mark.svg")} />
           <span className="nav__word" role="img" aria-label="Aperture" style={mask("/brand/wordmark.svg")} />

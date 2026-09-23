@@ -6,15 +6,16 @@ export default function Faq() {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <section className="faq" id="faq" aria-labelledby="faq-title">
-      <div className="container faq__grid">
-        <div>
-          <div className="slabel" data-reveal>
-            <span className="slabel__t">FAQs</span>
-          </div>
-          <h2 className="h-48" id="faq-title" data-reveal="0.1">
-            {faqs.title}
-          </h2>
+      <div className="container">
+        {/* label sits above both columns so the heading and the first question start on the same line */}
+        <div className="slabel" data-reveal>
+          <span className="slabel__t">FAQs</span>
         </div>
+      </div>
+      <div className="container faq__grid">
+        <h2 className="h-48 faq__title" id="faq-title" data-reveal="0.1">
+          {faqs.title}
+        </h2>
         <ul className="faq__list" data-reveal="0.1">
           {faqs.items.map((item, i) => {
             const isOpen = open === i;

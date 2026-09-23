@@ -23,7 +23,7 @@ export default function Cta() {
   }, []);
   const img = photo(cta.image);
   return (
-    <section className="cta" id="contact" ref={root} aria-labelledby="cta-title">
+    <section className="cta" id="contact" ref={root} aria-labelledby="cta-title" data-nav="dark">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="cta__bg" src={img.src} srcSet={img.srcSet} sizes="100vw" alt="" loading="lazy" />
       <div className="cta__overlay" />

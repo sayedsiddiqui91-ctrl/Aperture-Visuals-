@@ -37,7 +37,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <main className="page">
       <Reveal />
-      <section className="phero">
+      <section className="phero" data-nav="dark">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={cover.src} srcSet={cover.srcSet} sizes="100vw" alt={p.name} fetchPriority="high" />
         <div className="hero__overlay" />

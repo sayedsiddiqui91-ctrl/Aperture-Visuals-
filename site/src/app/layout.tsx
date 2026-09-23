@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Cormorant_Garamond } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Nav from "@/components/Nav";
@@ -7,8 +7,8 @@ import WhatsAppChooser from "@/components/WhatsAppChooser";
 import { site } from "@/data/content";
 import { qrSvg } from "@/lib/qr";
 
-const sans = Poppins({ subsets: ["latin"], variable: "--font-sans", weight: ["300", "400", "500", "600"] });
-const display = Cormorant_Garamond({ subsets: ["latin"], variable: "--font-display", weight: ["400", "500"] });
+// One family for everything; hierarchy comes from size, weight and tracking.
+const sans = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://aperturevisuals.com"),
@@ -31,7 +31,7 @@ export const viewport: Viewport = { themeColor: "#082c2e", width: "device-width"
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const waQr = await qrSvg(site.whatsapp); // encodes the wa.me link, which a phone camera opens in the app
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`} suppressHydrationWarning>
+    <html lang="en" className={sans.variable} suppressHydrationWarning>
       <head>
         {/* reveal animations only hide content when JS is actually running */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add(\"js\")" }} />

@@ -34,10 +34,9 @@ export default function Hero() {
     // The headline entrance is a CSS animation (globals.css) so it starts at first paint instead of
     // waiting for hydration — the headline is the LCP element on phones.
     const ctx = gsap.context(() => {
-      // the content settles and dims slightly as the portfolio slides over
+      // the content drifts up a little as the portfolio slides over (no fading — it made the text look grey)
       gsap.to(el.querySelector(".hero__content"), {
         y: -60,
-        opacity: 0.4,
         ease: "none",
         scrollTrigger: { trigger: el, start: "top top", end: "50% top", scrub: true },
       });
@@ -71,7 +70,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="hero" ref={root} aria-label="Intro">
+    <section className="hero" ref={root} aria-label="Intro" data-nav="dark">
       <div className="hero__sticky">
         <picture>
           <source media="(max-width: 767px)" srcSet="/video/poster-portrait.webp" />
